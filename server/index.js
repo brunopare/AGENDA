@@ -41,6 +41,29 @@ app.post("/api/insert", (req,res) =>{
     })
 });
 
+//deletar registro
+app.delete("/api/delete/:nomeP", (req,res) =>{
+    const nomeP = req.params.nomeP
+    const sqlDelete = "DELETE  FROM tabelaAgenda WHERE nome = ?";
+
+    db.query(sqlDelete, nomeP, (err,result)=>{
+        if (err) console.log(err);
+    });
+})
+
+//atualizar registro
+app.put("/api/update/", (req,res) =>{
+    const nomeP = req.body.nomeP
+    const emailP = req.body.emailP
+    const telefoneP = req.body.telefoneP
+    const sqlUptade = "UPDATE tabelaAgenda SET  nome, email ,telefone = ??? WEHRE nome = ? ";
+
+    db.query(sqlUptade, [nomeP, emailP, telefoneP], (err,result)=>{
+        if (err) console.log(err);
+    });
+})
+
+
 const port = 3010
 
 app.listen(port, () =>{

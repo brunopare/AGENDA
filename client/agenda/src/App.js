@@ -7,6 +7,10 @@ function App() {
   const [email, setEmail] = useState('')
   const [telefone, setTelefone] = useState('')
   const [agendaLista, setAgendaLista] = useState([]);
+
+  const [novoNome, setNovoNome] = useState('');
+  const [novoEmail, setNovoEmail] = useState('');
+  const [novoTelefone, setNovoTelefone] = useState('');
   //mostar os dados no front
   useEffect(()=>{
     axios.get("http://localhost:3010/api/get").then((response)=>{
@@ -19,9 +23,28 @@ function App() {
       nomeP: nome, 
       emailP: email, 
       telefoneP: telefone
-    }).then(()=>{
-      alert("Cadastro Realizado!")
     });
+
+  
+    setAgendaLista([...agendaLista, 
+        {nome:nome, email: email, telefone: telefone},
+      ]);
+
+  };
+
+  const deletaRegistro =  (nompessoa) =>{
+    axios.delete(`http://localhost:3010/api/delete/${nompessoa}`)
+  }
+
+  const atualizaRegistro = (nompessoa,emailpessoa,telefonepessoa) => {
+    axios.put("http://localhost:3010/api/update/", {
+      nomeP: nompessoa, 
+      emailP: emailpessoa, 
+      telefoneP: telefonepessoa
+    });
+    setNovoNome("")
+    setNovoEmail("")
+    setNovoTelefone("")
   };
 
   return (
@@ -45,8 +68,22 @@ function App() {
         <button onClick={submitRegister}>Submit</button>
 
         {agendaLista.map((val)=>{
-          return <h1>Nome: {val.nome} | Telefone: {val.telefone} | Email: {val.email}</h1>
-         
+          return (
+            <div className="card">
+              <h1>{val.nome}</h1>
+              <p>{val.telefone}</p>
+              <p>{val.email}</p>
+              
+              <input type="text" id="updateInput" placeholder="Editar Nome" onChange={(e) =>{
+                setNovoNome(e.target.value)
+              }}/>
+              <input type="text" id="updateInput" placeholder="Editar telefone"/>
+              <input type="text" id="updateInput" placeholder="Editar email"/>
+              <button onClick={()=>{deletaRegistro(val.nome)}}>Deletar</button>
+              <button onClick={()=>{atualizaRegistro(val.nome,val.telefone,val.email)}}>Update</button>
+
+            </div>
+          )
         })}
 
       </div>
