@@ -1,20 +1,27 @@
 import React, {useState, useEffect} from "react";
 import './App.css';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 function App() {
 
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [telefone, setTelefone] = useState('')
+  const [agendaLista, setAgendaLista] = useState([]);
+  //mostar os dados no front
+  useEffect(()=>{
+    axios.get("http://localhost:3010/api/get").then((response)=>{
+      setAgendaLista(response.data)
+    })
+  },[])
 
-  const submitRegister = () =>{
-    axios.post('http://http://localhost:3010/api/insert', {
+  const submitRegister = () => {
+    axios.post("http://localhost:3010/api/insert", {
       nomeP: nome, 
       emailP: email, 
       telefoneP: telefone
     }).then(()=>{
       alert("Cadastro Realizado!")
-    })
+    });
   };
 
   return (
@@ -33,9 +40,15 @@ function App() {
         <input type={"tel"} name={"telefone"} onChange = {(e) =>{
           setTelefone(e.target.value)
         }} />
-       <sobeArquivo/>
+       
 
-        <button onclick={submitRegister}>Submit</button>
+        <button onClick={submitRegister}>Submit</button>
+
+        {agendaLista.map((val)=>{
+          return <h1>Nome: {val.nome} | Telefone: {val.telefone} | Email: {val.email}</h1>
+         
+        })}
+
       </div>
 
     </div>

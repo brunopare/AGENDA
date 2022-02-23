@@ -1,9 +1,9 @@
-//criando o server
+//api
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
-const multer = require('multer');
 const mysql = require('mysql') 
 
 const db = mysql.createPool({
@@ -13,17 +13,30 @@ const db = mysql.createPool({
     database: 'agenda'
 });
 
+app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
+//pegando os registros 
+app.get("/api/get/", (req,res) => {
+    const sqlSelect = "SELECT * FROM tabelaAgenda";
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+
+    });
+});
+
+
+//inserindo no banco os registros 
 app.post("/api/insert", (req,res) =>{
 
     const nomeP = req.body.nomeP
     const emailP = req.body.emailP
     const telefoneP = req.body.telefoneP
-    const imagemP = req.body.imagemP
 
-    const sqlInsert = "INSERT INTO tabelaAgenda (nome, email, telefone, imagem) VALUES (?,?,?,?)"
-    db.query(sqlInsert, [nomeP, emailP, telefoneP, imagemP], (err, result) => {
+    const sqlInsert = "INSERT INTO tabelaAgenda (nome, email, telefone) VALUES (?,?,?)"
+    db.query(sqlInsert, [nomeP, emailP, telefoneP], (err, result) => {
+        console.log(result)
 
     })
 });
