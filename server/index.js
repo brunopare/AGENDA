@@ -56,9 +56,10 @@ app.put("/api/update/", (req,res) =>{
     const nomeP = req.body.nomeP
     const emailP = req.body.emailP
     const telefoneP = req.body.telefoneP
-    const sqlUptade = "UPDATE tabelaAgenda SET  nome, email ,telefone = ??? WEHRE nome = ? ";
+    const idP = req.body.idP
+    const sqlUptade = "UPDATE tabelaAgenda SET  nome = ?, email = ? ,telefone = ? WHERE id = ?";
 
-    db.query(sqlUptade, [nomeP, emailP, telefoneP], (err,result)=>{
+    db.query(sqlUptade, [nomeP, emailP, telefoneP, idP], (err,result)=>{
         if (err) console.log(err);
     });
 })
